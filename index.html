@@ -33,25 +33,50 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const GIST_ID = '4530f26b2b953f01bb67f40732ccf417'; // Jūsų Gist ID
+            const GITHUB_API_TOKEN = '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'; // Jūsų GitHub API Token
+
             const videoForm = document.getElementById('videoForm');
             const videoUrlInput = document.getElementById('videoUrl');
             const videoFrame = document.getElementById('videoFrame');
 
-            // Pakrauti išsaugotą video nuorodą iš LocalStorage
-            const savedVideoUrl = localStorage.getItem('videoUrl');
-            if (savedVideoUrl) {
-                videoFrame.src = savedVideoUrl;
-            }
+            // Pakrauti išsaugotą video nuorodą iš Gist
+            fetch(`https://api.github.com/gists/${GIST_ID}`)
+            .then(response => response.json())
+            .then(data => {
+                const fileContent = data.files['videoUrl.txt'].content;
+                if (fileContent) {
+                    videoFrame.src = fileContent;
+                }
+            });
 
             videoForm.addEventListener('submit', function(event) {
                 event.preventDefault();
                 const videoUrl = videoUrlInput.value;
 
-                // Patikrinti ir išsaugoti nuorodą LocalStorage
+                // Patikrinti ir išsaugoti nuorodą Gist
                 if (videoUrl) {
-                    localStorage.setItem('videoUrl', videoUrl);
-                    videoFrame.src = videoUrl;
-                    videoUrlInput.value = '';
+                    fetch(`https://api.github.com/gists/${GIST_ID}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `token ${GITHUB_API_TOKEN}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            files: {
+                                'videoUrl.txt': {
+                                    content: videoUrl
+                                }
+                            }
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            videoFrame.src = videoUrl;
+                            videoUrlInput.value = '';
+                        }
+                    });
                 }
             });
         });
