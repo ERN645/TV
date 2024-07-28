@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="lt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Nuorodų Tvarkymas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #videoContainer {
+            margin-top: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 315px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Video Nuorodų Tvarkymas</h1>
+    <form id="videoForm">
+        <label for="videoUrl">Įveskite video nuorodą:</label><br><br>
+        <input type="text" id="videoUrl" name="videoUrl" placeholder="Įklijuokite nuorodą čia" style="width: 100%;" required><br><br>
+        <button type="submit">Išsaugoti</button>
+    </form>
+
+    <div id="videoContainer">
+        <h2>Peržiūrėti video:</h2>
+        <iframe id="videoFrame" src="" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoForm = document.getElementById('videoForm');
+            const videoUrlInput = document.getElementById('videoUrl');
+            const videoFrame = document.getElementById('videoFrame');
+
+            // Pakrauti išsaugotą video nuorodą
+            const savedVideoUrl = localStorage.getItem('videoUrl');
+            if (savedVideoUrl) {
+                videoFrame.src = savedVideoUrl;
+            }
+
+            videoForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const videoUrl = videoUrlInput.value;
+
+                // Patikrinti ir išsaugoti nuorodą
+                if (videoUrl) {
+                    localStorage.setItem('videoUrl', videoUrl);
+                    videoFrame.src = videoUrl;
+                    videoUrlInput.value = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
