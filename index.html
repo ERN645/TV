@@ -37,7 +37,7 @@
             const videoUrlInput = document.getElementById('videoUrl');
             const videoFrame = document.getElementById('videoFrame');
 
-            // Pakrauti išsaugotą video nuorodą
+            // Pakrauti išsaugotą video nuorodą iš LocalStorage
             const savedVideoUrl = localStorage.getItem('videoUrl');
             if (savedVideoUrl) {
                 videoFrame.src = savedVideoUrl;
@@ -47,7 +47,7 @@
                 event.preventDefault();
                 const videoUrl = videoUrlInput.value;
 
-                // Patikrinti ir išsaugoti nuorodą
+                // Patikrinti ir išsaugoti nuorodą LocalStorage
                 if (videoUrl) {
                     localStorage.setItem('videoUrl', videoUrl);
                     videoFrame.src = videoUrl;
